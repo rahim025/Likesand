@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fanzy — Aime des photos, gagne des FCFA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <span class="logo">Fanzy</span>
+  <div class="wallet-pill" id="walletPill">
+    <span class="wallet-amount" id="walletAmount">0</span>
+    <span class="wallet-unit">FCFA</span>
+  </div>
+</header>
+
+<main>
+  <section id="authView" class="auth-view">
+    <h1 class="hero-title">Aime une photo.<br>Empoche des FCFA.</h1>
+    <p class="hero-sub">Des marques payent pour être vues. Toi, tu es payé pour regarder et aimer. Retrait direct sur MTN MoMo ou Moov Money.</p>
+
+    <div class="auth-card">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="login">Se connecter</button>
+        <button class="tab-btn" data-tab="register">Créer un compte</button>
+      </div>
+
+      <form id="loginForm" class="auth-form">
+        <input type="tel" name="phone_number" placeholder="Numéro de téléphone" required />
+        <input type="password" name="password" placeholder="Mot de passe" required />
+        <button type="submit">Se connecter</button>
+        <p class="form-error" id="loginError"></p>
+        <button type="button" class="link-btn" id="openForgotPassword">Mot de passe oublié ?</button>
+      </form>
+
+      <form id="registerForm" class="auth-form hidden">
+        <input type="text" name="full_name" placeholder="Nom complet" required />
+        <input type="tel" name="phone_number" placeholder="Numéro de téléphone" required />
+        <select name="operator" required>
+          <option value="" disabled selected>Opérateur mobile money</option>
+          <option value="mtn_momo">MTN MoMo</option>
+          <option value="moov_money">Moov Money</option>
+        </select>
+        <input type="password" name="password" placeholder="Mot de passe (6 caractères min.)" minlength="6" required />
+
+        <label class="checkbox-row">
+          <input type="checkbox" id="differentPayoutCheckbox" />
+          Recevoir l'argent sur un autre numéro
+        </label>
+
+        <div id="payoutFields" class="hidden">
+          <select name="payout_operator" id="payoutOperator">
+            <option value="" disabled selected>Opérateur de réception</option>
+            <option value="mtn_momo">MTN MoMo</option>
+            <option value="moov_money">Moov Money</option>
+          </select>
+          <input type="tel" name="payout_phone_number" id="payoutPhoneNumber" placeholder="Numéro qui recevra l'argent" />
+        </div>
+
+        <button type="submit">Créer mon compte</button>
+        <p class="form-error" id="registerError"></p>
+      </form>
+    </div>
+  </section>
+
+  <section id="feedView" class="feed-view hidden">
+    <div class="feed" id="photoFeed"></div>
+    <p class="feed-empty hidden" id="feedEmpty">Aucune nouvelle photo pour l'instant — reviens un peu plus tard.</p>
+
+    <button class="withdraw-fab" id="openWithdraw">Retirer mon argent</button>
+  </section>
+</main>
+
+<div class="modal-overlay hidden" id="withdrawModal">
+  <div class="modal">
+    <h2>Retirer vers Mobile Money</h2>
+    <p class="modal-sub">Solde disponible : <strong id="modalBalance">0 FCFA</strong></p>
+    <form id="withdrawForm">
+      <input type="number" name="amount_fcfa" placeholder="Montant (min. 500 FCFA)" min="500" required />
+      <p class="modal-label">Numéro de réception</p>
+      <select name="operator" id="withdrawOperator" required>
+        <option value="" disabled>Choisis ton opérateur</option>
+        <option value="mtn_momo">MTN MoMo</option>
+        <option value="moov_money">Moov Money</option>
+      </select>
+      <input type="tel" name="phone_number" id="withdrawPhoneNumber" placeholder="Numéro de réception" required />
+      <button type="submit">Confirmer le retrait</button>
+      <p class="form-error" id="withdrawError"></p>
+    </form>
+    <button class="modal-close" id="closeWithdraw">Annuler</button>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="forgotModal">
+  <div class="modal">
+    <h2>Mot de passe oublié</h2>
+
+    <form id="forgotStep1" class="auth-form">
+      <p class="modal-sub">Entre ton numéro, on t'envoie un code par SMS.</p>
+      <input type="tel" name="phone_number" placeholder="Numéro de téléphone" required />
+      <button type="submit">Recevoir le code</button>
+      <p class="form-error" id="forgotStep1Error"></p>
+    </form>
+
+    <form id="forgotStep2" class="auth-form hidden">
+      <p class="modal-sub">Code envoyé au <span id="forgotPhoneDisplay"></span>.</p>
+      <input type="text" name="otp_code" placeholder="Code reçu par SMS" maxlength="6" required />
+      <input type="password" name="new_password" placeholder="Nouveau mot de passe" minlength="6" required />
+      <button type="submit">Réinitialiser le mot de passe</button>
+      <p class="form-error" id="forgotStep2Error"></p>
+      <button type="button" class="link-btn" id="resendOtp">Renvoyer le code</button>
+    </form>
+
+    <button class="modal-close" id="closeForgot">Annuler</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
