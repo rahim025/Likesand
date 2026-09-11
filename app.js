@@ -1,5 +1,5 @@
 // Remplace par l'URL de ton backend une fois déployé (ex: Render, Railway)
-const API_BASE = "https://ton-backend.exemple.com/api";
+const API_BASE = "https://likesand.onrender.com/api";;
 
 const state = {
   token: localStorage.getItem("fanzy_token") || null, // ⚠️ voir note en bas du fichier
