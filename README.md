@@ -4,7 +4,7 @@ Plateforme où des annonceurs payent pour que leurs photos soient vues et aimée
 et où les utilisateurs sont rémunérés en FCFA, retirables via **MTN MoMo** et
 **Moov Money**.
 
-## ⚠️ À lire avant de lancer le projet
+## ⚠️ À lire avant de lancer le projet 
 
 1. **Le modèle économique doit être réel avant l'ouverture au public.**
    Le montant versé par like (`reward_fcfa` dans la table `photos`) doit rester
