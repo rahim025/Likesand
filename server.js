@@ -23,16 +23,46 @@ const pool = new Pool({
 // les logs du serveur (utile en développement, à retirer avant la mise en
 // production).
 // ============================================================
-async function sendSms(phoneNumber, message) {
-  // Exemple de structure d'appel (pseudo-code, à adapter au fournisseur choisi) :
-  //
-  // await fetch("https://api.fournisseur-sms.com/v1/send", {
-  //   method: "POST",
-  //   headers: { Authorization: `Bearer ${process.env.SMS_API_KEY}` },
-  //   body: JSON.stringify({ to: phoneNumber, text: message }),
-  // });
+// Numéro de pays par défaut utilisé si l'utilisateur tape son numéro sans
+// indicatif (ex: "90123456" au lieu de "+22990123456"). Ajuste selon ton pays.
+const DEFAULT_COUNTRY_CODE = process.env.DEFAULT_COUNTRY_CODE || "+229";
 
-  console.log(`[SMS -> ${phoneNumber}] ${message}`);
+function normalizePhoneNumber(phoneNumber) {
+  if (phoneNumber.startsWith("+")) return phoneNumber;
+  const digitsOnly = phoneNumber.replace(/^0+/, ""); // retire le 0 initial si présent
+  return `${DEFAULT_COUNTRY_CODE}${digitsOnly}`;
+}
+
+async function sendSms(phoneNumber, message) {
+  try {
+    const params = new URLSearchParams();
+    params.append("username", process.env.AT_USERNAME);
+    params.append("to", normalizePhoneNumber(phoneNumber));
+    params.append("message", message);
+    if (process.env.AT_SENDER_ID) {
+      params.append("from", process.env.AT_SENDER_ID);
+    }
+
+    const response = await fetch(
+      "https://api.africastalking.com/version1/messaging",
+      {
+        method: "POST",
+        headers: {
+          apiKey: process.env.AT_API_KEY,
+          "Content-Type": "application/x-www-form-urlencoded",
+          Accept: "application/json",
+        },
+        body: params,
+      }
+    );
+
+    const data = await response.json();
+    console.log("Réponse Africa's Talking :", JSON.stringify(data));
+  } catch (err) {
+    // On ne bloque pas le flux si le SMS échoue à partir : l'utilisateur
+    // pourra redemander un code. On log juste l'erreur pour investiguer.
+    console.error("Erreur d'envoi SMS :", err);
+  }
 }
 
 function generateOtp() {
